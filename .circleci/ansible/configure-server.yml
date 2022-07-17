@@ -27,8 +27,6 @@
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
     # Add more env vars here
-    environment:
-    - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
     - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
     - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
     - TYPEORM_PORT: 5432
