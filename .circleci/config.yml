@@ -285,6 +285,7 @@ jobs:
             yum install -y node
             yum install -y npm
             yum install -y awscli
+            yum install -y tar gzip
       - run:
           name: Get backend url
           command: |
@@ -333,8 +334,8 @@ jobs:
             apk add --update tar gzip
             apk add --update nodejs
             apk add --update npm
-            apk add --awscli
-
+            pip install aws cli
+            echo $(aws --version)
       - run:
           name: Deploy backend
           command: |
