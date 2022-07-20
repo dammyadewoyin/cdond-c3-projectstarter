@@ -226,7 +226,7 @@ jobs:
             apk add --update ansible
             apk add --update  tar gzip
             apk add --update openssh-client git
-            apk add --no-cache aws-cli
+            apk add --no-cache python3 py3-pip && pip3 install --upgrade pip && pip3 install --no-cache-dir awscli && rm -rf /var/cache/apk/*
             
       - run:
           name: Configure server
@@ -334,7 +334,7 @@ jobs:
             apk add --update tar gzip
             apk add --update nodejs
             apk add --update npm
-            apk add --no-cache aws-cli
+            apk add --no-cache python3 py3-pip && pip3 install --upgrade pip && pip3 install --no-cache-dir awscli && rm -rf /var/cache/apk/*
             echo $(aws --version)
       - run:
           name: Deploy backend
