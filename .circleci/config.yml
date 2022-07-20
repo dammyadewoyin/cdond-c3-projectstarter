@@ -245,7 +245,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-        - run:
+      - run:
           name: Install dependencies
           command: |
             # Your code here
@@ -271,7 +271,7 @@ jobs:
             fi
       # Here's where you will add some code to rollback on failure   
       - destroy-environment
-      
+
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
