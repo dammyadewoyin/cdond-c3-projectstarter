@@ -244,12 +244,7 @@ jobs:
       # Checkout code from git
       - checkout
       - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: Install dependencies
-          command: |
-            # Your code here
-            apk add --update awscli          
+          keys: [backend-build]       
       - run:
           name: Run migrations
           command: |
