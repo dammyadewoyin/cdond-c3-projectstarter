@@ -226,6 +226,7 @@ jobs:
             apk add --update ansible
             apk add --update  tar gzip
             apk add --update openssh-client git
+            apk add --no-cache aws-cli
             
       - run:
           name: Configure server
@@ -274,8 +275,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -284,8 +283,9 @@ jobs:
             yum install -y ansible
             yum install -y node
             yum install -y npm
-            yum install -y awscli
             yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get backend url
           command: |
@@ -321,7 +321,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["93:f8:a2:95:9d:d7:a2:6d:fe:f9:bb:47:e8:e3:d6:e9"]
+          fingerprints: ["93:f8:a2:95:9d:d7:a2:6d:fe:f9:bb:47:e8:e3:d6:e9"]  
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -334,7 +334,7 @@ jobs:
             apk add --update tar gzip
             apk add --update nodejs
             apk add --update npm
-            pip install aws cli
+            apk add --no-cache aws-cli
             echo $(aws --version)
       - run:
           name: Deploy backend
