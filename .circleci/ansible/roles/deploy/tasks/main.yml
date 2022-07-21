@@ -1,6 +1,6 @@
 - name : copy zip file 
   copy:
-    src: project/artifact.tar.gz
+    src: "artifact.tar.gz"
     dest: home/ubuntu/artifact.tar.gz
     
 - name: Extract tar
