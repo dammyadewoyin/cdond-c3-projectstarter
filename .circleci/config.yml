@@ -6,25 +6,24 @@ commands:
     parameters:
       # Add parameter here   
       workflowid:
-        type : env_var_name
-        default: CIRCLE_WORKFLOW_ID 
+        type : string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
+            echo "Destroying environment: << parameters.workflow_id >> "
             # Your code here
-            aws cloudformation delete-stack --stack-name udapeople-backend-${<<parameters.workflowid>>:0:7}
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${<<parameters.workflowid>>:0:7}
-            aws s3 rm s3://udapeople-${<<parameters.workflowid>>:0:7} --recursive
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflowid >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflowid >>
+            aws s3 rm s3://udapeople-<< parameters.workflowid >> --recursive
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
       # Add parameter here    
       workflowid:
-        type : env_var_name
-        default: CIRCLE_WORKFLOW_ID   
+        type : string
     steps:
       - run:
           name: Revert migrations
@@ -32,8 +31,8 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure https://kvdb.io/7H6eoyRNy82rUZjVsuWxbG/migration_${<<parameters.workflowid>>:0:7})
-            echo $(curl --insecure https://kvdb.io/7H6eoyRNy82rUZjVsuWxbG/migration_${<<parameters.workflowid>>:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/7H6eoyRNy82rUZjVsuWxbG/migration_<< parameters.workflowid >>)
+            echo $SUCCESS
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -211,7 +210,8 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment    
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}"     
 
   configure-infrastructure:
     docker:
@@ -242,7 +242,8 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure      
-      - destroy-environment
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}" 
       
   run-migrations:
     docker:
@@ -273,7 +274,8 @@ jobs:
               curl --insecure https://kvdb.io/7H6eoyRNy82rUZjVsuWxbG/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       # Here's where you will add some code to rollback on failure   
-      - destroy-environment
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   deploy-frontend:
     docker:
@@ -316,8 +318,10 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure   
-      - destroy-environment 
-      - revert-migrations
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          "${CIRCLE_WORKFLOW_ID:0:7}"
                     
   deploy-backend:
     docker:
@@ -364,32 +368,64 @@ jobs:
           paths: 
             - project/artifact.tar.gz
       # Here's where you will add some code to rollback on failure 
-      - destroy-environment  
-      - revert-migrations
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}"  
+      - revert-migrations:
+          "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  #smoke-test:
-  #  docker:
-  #    # Lightweight Docker image 
-  #  steps:
-  #    # Checkout code from git
-  #    - run:
-  #        name: Install dependencies
-  #        command: |
-  #          # your code here
-  #    - run:
-  #        name: Get backend url
-  #        command: |
-  #          # your code here
-  #    - run:
-  #        name: Backend smoke test.
-  #        command: |
-  #          # your code here
-  #    - run:
-  #        name: Frontend smoke test.
-  #        command: |
-  #          # your code here
-  #    # Here's where you will add some code to rollback on failure  
-#
+  smoke-test:
+    docker:
+      # Lightweight Docker image 
+      - image: python:3.10-alpine3.16
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here 
+            apk add --update curl
+            apk add --update openssh-client git
+            apk add --update nodejs
+            apk add --update npm
+            apk add --update --no-cache aws-cli
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export Public_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=udapeople" \
+            --output text)
+      - run:
+          name: Backend smoke test.
+          command: |
+            # your code here
+            # Fetch and prepare the BACKEND_IP env var
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              return 0
+            else
+              return 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            # your code here
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+            # Change this to 0 after the job fails
+              return 1
+            else
+              return 1
+            fi
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          "${CIRCLE_WORKFLOW_ID:0:7}" 
   #cloudfront-update:
   #  docker:
   #    # Docker image here that supports AWS CLI
@@ -451,8 +487,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      #- smoke-test:
-          #requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       #- cloudfront-update:
           #requires: [smoke-test]
       #- cleanup:
