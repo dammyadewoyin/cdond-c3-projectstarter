@@ -6,8 +6,8 @@
 
 - name: Extract tar file
   unarchive: 
-    src: "artifact.tar.gz"
-    dest: "home/ubuntu/"
+    src: "files/artifact.tar.gz"
+    dest: "~/"
 
 - name: start app
   shell: |
