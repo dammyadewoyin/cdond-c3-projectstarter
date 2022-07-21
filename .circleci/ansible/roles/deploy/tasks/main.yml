@@ -1,12 +1,13 @@
-- name : copy zip file 
+--- 
+- name: copy file into EC2
   copy:
     src: "artifact.tar.gz"
-    dest: home/ubuntu/artifact.tar.gz
-    
-- name: Extract tar
+    dst: "home/ubuntu/artifact.tar.gz"
+     
+- name: Extract tar file into Ec2
   unarchive:
-    src: home/ubuntu/artifact.tar.gz
-    dst:  home/ubuntu/
+    src: "home/ubuntu/artifact.tar.gz"
+    dst:  "home/ubuntu/"
     remote_src: yes
 
 - name: start app
