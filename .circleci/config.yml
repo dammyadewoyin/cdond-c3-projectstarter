@@ -7,16 +7,16 @@ commands:
       # Add parameter here   
       workflowid:
         type : env_var_name
-        default: CIRCLE_WORKFLOW_ID:0:7
+        default: CIRCLE_WORKFLOW_ID 
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
             # Your code here
-            aws cloudformation delete-stack --stack-name udapeople-backend-${<<parameters.workflowid>>}
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${<<parameters.workflowid>>}
-            aws s3 rm s3://udapeople-${<<parameters.workflowid>>} --recursive
+            aws cloudformation delete-stack --stack-name udapeople-backend-${<<parameters.workflowid>>:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${<<parameters.workflowid>>:0:7}
+            aws s3 rm s3://udapeople-${<<parameters.workflowid>>:0:7} --recursive
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
