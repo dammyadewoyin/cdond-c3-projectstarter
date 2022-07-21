@@ -407,10 +407,13 @@ jobs:
             --filters "Name=tag:project,Values=udapeople" \
             --output text)
             echo $BACKEND_IP
+            echo $BACKEND_IP >> backend/.env
       - run:
           name: Backend smoke test.
           command: |
             # your code here
+            cd frontend/.env
+            echo $BACKEND_IP
             # Fetch and prepare the BACKEND_IP env var
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
