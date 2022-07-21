@@ -1,14 +1,13 @@
 --- 
-- name: copy file into EC2
-  copy:
-    src: "artifact.tar.gz"
-    dest: "home/ubuntu/artifact.tar.gz"
-     
+- name: Create directory
+  file:
+    path: ~/udapp
+    state: directory
+
 - name: Extract tar file into Ec2
   unarchive:
-    src: "home/ubuntu/artifact.tar.gz"
-    dest:  "home/ubuntu/"
-    remote_src: yes
+    src: "project/backend/artifact.tar.gz"
+    dest:  "home/ubuntu/udapp"
 
 - name: start app
   shell: |
