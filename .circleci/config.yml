@@ -362,7 +362,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths: 
-            - ~/project/artifact.tar.gz
+            - project/artifact.tar.gz
       # Here's where you will add some code to rollback on failure 
       - destroy-environment  
       - revert-migrations
