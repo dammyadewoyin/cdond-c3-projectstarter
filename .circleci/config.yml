@@ -211,7 +211,8 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}"     
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"     
 
   configure-infrastructure:
     docker:
@@ -243,7 +244,8 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure      
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}" 
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
       
   run-migrations:
     docker:
@@ -275,7 +277,8 @@ jobs:
             fi
       # Here's where you will add some code to rollback on failure   
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}" 
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   deploy-frontend:
     docker:
@@ -319,9 +322,11 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure   
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}" 
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
-          "${CIRCLE_WORKFLOW_ID:0:7}"
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"
                     
   deploy-backend:
     docker:
@@ -369,9 +374,11 @@ jobs:
             - project/artifact.tar.gz
       # Here's where you will add some code to rollback on failure 
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}"  
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"  
       - revert-migrations:
-          "${CIRCLE_WORKFLOW_ID:0:7}"
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"
 
   smoke-test:
     docker:
@@ -425,7 +432,8 @@ jobs:
             fi
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
-          "${CIRCLE_WORKFLOW_ID:0:7}" 
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
   #cloudfront-update:
   #  docker:
   #    # Docker image here that supports AWS CLI
