@@ -4,7 +4,7 @@
     src: "files/artifact.tar.gz"
     dest: "~/"
 
-- name: Extract tar file
+- name: Extract zipped file
   unarchive: 
     src: "files/artifact.tar.gz"
     dest: "~/"
