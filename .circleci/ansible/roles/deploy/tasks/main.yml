@@ -1,13 +1,12 @@
 --- 
-- name: Create directory
-  file:
-    path: ~/udapp
-    state: directory
+- name: Copy artifact.tar.gz to EC2
+  copy:
+    src: "files/artifact.tar.gz"
+    dest: "~/"
 
-- name: Extract tar file into Ec2
-  unarchive:
-    src: "project/backend/artifact.tar.gz"
-    dest:  "home/ubuntu/udapp"
+- name: Extract tar file
+  shell: |
+    tar -xvfz artifact.tar.gz
 
 - name: start app
   shell: |
