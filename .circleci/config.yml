@@ -353,7 +353,7 @@ jobs:
           command: |
             # your code here
             apk add --update ansible
-            #apk add --update openssh-client git
+            apk add --update openssh-client git
             apk add --update tar gzip curl
             apk add --update nodejs
             apk add --update npm
