@@ -319,7 +319,11 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive         
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive   
+      #- persist_to_workspace:
+              #root: ~/
+              #paths: 
+                #- frontend/.env       
       # Here's where you will add some code to rollback on failure   
       - destroy-environment:
           workflowid:
@@ -412,7 +416,7 @@ jobs:
           name: Backend smoke test.
           command: |
             # your code here
-            cd frontend/.env
+            cd backend/.env
             echo $BACKEND_IP
             # Fetch and prepare the BACKEND_IP env var
             export API_URL="http://${BACKEND_IP}:3030"
@@ -421,7 +425,7 @@ jobs:
             then
               return 0
             else
-              return 1
+              return 1 
             fi
       - run:
           name: Frontend smoke test.
