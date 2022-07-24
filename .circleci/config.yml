@@ -392,16 +392,15 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ~/
+      #- attach_workspace:
+          #at: ~/
       - run:
           name: Install dependencies
           command: |
             # your code here 
             apk add --update curl
             apk add --update openssh-client git
-            apk add --update nodejs
-            apk add --update npm
+            apk add --update nodejs npm
             apk add --update --no-cache aws-cli
       - run:
           name: Get backend url
