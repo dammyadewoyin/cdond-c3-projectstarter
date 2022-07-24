@@ -31,14 +31,12 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure https://kvdb.io/WrRqsDqt4NxmBQw7AhyLUU/migration_<< parameters.workflowid >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/ENYjrip4YtB6vwRgNy1oD6/migration_<< parameters.workflowid >>)
             echo $SUCCESS
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
-              npm install
-              #Add revert code here. You can find this in the Getting Started section.
-              cd backend
+              npm install           
               npm run migrations:revert
             fi
             
@@ -277,8 +275,8 @@ jobs:
               # If you are using memstash.io, generate the token "7933fe63-4687-4fa1-8426-aa25aa1730ec" on the website
               #curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
               # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
-              curl --insecure https://kvdb.io/WrRqsDqt4NxmBQw7AhyLUU/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-              echo "value:$(curl --insecure https://kvdb.io/WrRqsDqt4NxmBQw7AhyLUU/migration_${CIRCLE_WORKFLOW_ID:0:7})"
+              curl --insecure https://kvdb.io/ENYjrip4YtB6vwRgNy1oD6/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              echo "value:$(curl --insecure https://ENYjrip4YtB6vwRgNy1oD6/migration_${CIRCLE_WORKFLOW_ID:0:7})"
             fi
       # Here's where you will add some code to rollback on failure   
       - destroy-environment:
@@ -445,13 +443,13 @@ jobs:
             else
               return 1
             fi
-      # Here's where you will add some code to rollback on failure  
-      - revert-migrations:
-          workflowid:
-            "${CIRCLE_WORKFLOW_ID:0:7}"
+      # Here's where you will add some code to rollback on failure     
       - destroy-environment:
           workflowid:
             "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"
      
   cloudfront-update:
     docker:
