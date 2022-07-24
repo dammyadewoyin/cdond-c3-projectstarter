@@ -327,13 +327,13 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive  
             echo "${CIRCLE_WORKFLOW_ID:0:7}"
             echo "Frontend URL : http://${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com"    
-      # Here's where you will add some code to rollback on failure  
-      - revert-migrations:
-          workflowid:
-            "${CIRCLE_WORKFLOW_ID:0:7}" 
+      # Here's where you will add some code to rollback on failure   
       - destroy-environment:
           workflowid:
-            "${CIRCLE_WORKFLOW_ID:0:7}"       
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}"
                     
   deploy-backend:
     docker:
@@ -446,12 +446,13 @@ jobs:
               return 1
             fi
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment:
-          workflowid:
-            "${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
           workflowid:
             "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflowid:
+            "${CIRCLE_WORKFLOW_ID:0:7}" 
+     
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
