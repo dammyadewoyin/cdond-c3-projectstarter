@@ -1,15 +1,6 @@
 version: 2.1
 
 commands:
-  install-nodejs:
-    description: install nodejs 13
-    steps:
-      - run:
-          name: Install nodejs 
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-            sudo apt install -y nodejs
-
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -397,7 +388,7 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image 
-      - image: python:3.10-alpine3.16
+      - image: alpine:latest
     steps:
       # Checkout code from git
       - checkout
@@ -409,9 +400,13 @@ jobs:
             # your code here 
             apk add --update curl
             apk add --update openssh-client git
-            #apk add --update nodejs npm
             apk add --update --no-cache aws-cli
-      - install-nodejs
+      - run:
+          name: install nodejs
+          command: |
+            apk add --no-cache nodejs
+            apk add --no-cache npm
+            
       - run:
           name: Get backend url
           command: |
