@@ -1,0 +1,9 @@
+A public git repository with your project code. [URL01]
+https://github.com/dammyadewoyin/cdond-c3-projectstarter
+
+Evidence of deployed and functioning front-end application in an S3 bucket [URL02] 
+S3 Bucket – http://udapeople-fec3f0e.s3-website-us-east-1.amazonaws.com
+
+Console output of appropriate failure for infrastructure creation job (using CloudFormation). [SCREENSHOT05]
+No failure encountered for infrastructure creation with no change to backend.yml file. Udacity key pair was created from the onset. AMI ID changed to that of Ubuntu 18, however, the previous AMI ID did not generate an error. AWS::EC2::SecurityGroup was correctly referenced in the YAML file.
+
