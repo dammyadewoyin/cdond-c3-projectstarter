@@ -252,8 +252,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      #- restore_cache:
-          #keys: [backend-build] 
+      - restore_cache:
+          keys: [backend-build] 
       - run:
           name: Install dependencies
           command: |
@@ -392,8 +392,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      #- attach_workspace:
-          #at: ~/
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -401,12 +401,8 @@ jobs:
             apk add --update curl
             apk add --update openssh-client git
             apk add --update --no-cache aws-cli
-      - run:
-          name: install nodejs
-          command: |
-            apk add --no-cache nodejs
-            apk add --no-cache npm
-            
+            apk add --no-cache nodejs 
+            apk add --no-cache npm                
       - run:
           name: Get backend url
           command: |
