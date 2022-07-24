@@ -2,6 +2,7 @@ A public git repository with your project code. [URL01]
 https://github.com/dammyadewoyin/cdond-c3-projectstarter
 
 Evidence of deployed and functioning front-end application in an S3 bucket [URL02] 
-S3 Bucket – http://udapeople-45abe5f.s3-website-us-east-1.amazonaws.com
+S3 Bucket – http://udapeople-b707398.s3-website-us-east-1.amazonaws.com
 
+Evidence of healthy backend - http://18.234.189.253:3030/api/status
 
