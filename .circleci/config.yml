@@ -1,6 +1,15 @@
 version: 2.1
 
 commands:
+  install-nodejs:
+    description: install nodejs 13
+    steps:
+      - run:
+          name: Install nodejs 
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt install -y nodejs
+
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -33,7 +42,7 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl --insecure https://kvdb.io/ENYjrip4YtB6vwRgNy1oD6/migration_<<parameters.workflowid>>)
             echo $SUCCESS
-            if $SUCCESS==1 
+            if (($SUCCESS==1));
             then
               cd ~/project/backend
               npm install           
@@ -252,8 +261,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - restore_cache:
-          keys: [backend-build] 
+      #- restore_cache:
+          #keys: [backend-build] 
       - run:
           name: Install dependencies
           command: |
@@ -400,8 +409,9 @@ jobs:
             # your code here 
             apk add --update curl
             apk add --update openssh-client git
-            apk add --update nodejs npm
+            #apk add --update nodejs npm
             apk add --update --no-cache aws-cli
+      - install-nodejs
       - run:
           name: Get backend url
           command: |
